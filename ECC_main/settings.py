@@ -122,5 +122,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+SLACK_APP_TOKEN = settings_secret.SLACK_APP_TOKEN
+
 SLACK_CLIENT_ID = settings_secret.SLACK_CLIENT_ID
 SLACK_CLIENT_SECRET = settings_secret.SLACK_CLIENT_SECRET
+
