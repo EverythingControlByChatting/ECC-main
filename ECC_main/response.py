@@ -53,8 +53,8 @@ class LazySlashResponse(SlashResponse):
         :param waiting_message: 사용자에게 보여지는 waiting message. 빈 문자열은 아무값도 보이지 않습니다.
         :param response_type: "ephemeral" 또는 "in_channel"
         """
-        def async_func(_args, _kwargs):
-            result = func(_args, _kwargs)
+        def async_func(*_args, **_kwargs):
+            result = func(*_args, **_kwargs)
             if result is not None \
                     and not isinstance(result, dict) \
                     and not isinstance(result, str):
