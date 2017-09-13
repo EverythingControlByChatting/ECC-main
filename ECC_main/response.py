@@ -40,10 +40,10 @@ class LazySlashResponse(SlashResponse):
                  waiting_message="_waiting..._", response_type="ephemeral"):
         def async_func(_args, _kwargs):
             result = func(_args, _kwargs)
-            json_data = {
-                "response_type": response_type,
-                "text": result
-            }
+
+            json_data = result if isinstance(result, dict) \
+                else {"response_type": response_type, "text": result}
+
             request = requests.post(response_url, json=json_data)
 
             if request_result_func is not None:
