@@ -1,5 +1,8 @@
 from django.http import JsonResponse
 
+import threading
+import requests
+
 
 class SlashResponse(JsonResponse):
     """
@@ -29,3 +32,23 @@ class SlashResponse(JsonResponse):
                 data = {"response_type": response_type, "text": data}
 
             super(SlashResponse, self).__init__(data)
+
+
+class LazySlashResponse(SlashResponse):
+    def __init__(self, response_url,
+                 func, args=(), kwargs=None, request_result_func=None,
+                 waiting_message="_waiting..._", response_type="ephemeral"):
+        def async_func(_args, _kwargs):
+            result = func(_args, _kwargs)
+            json_data = {
+                "response_type": response_type,
+                "text": result
+            }
+            request = requests.post(response_url, json=json_data)
+
+            if request_result_func is not None:
+                request_result_func(request)
+
+        super(LazySlashResponse, self).__init__(data=waiting_message)
+
+        threading.Thread(target=async_func, args=args, kwargs=kwargs).start()
