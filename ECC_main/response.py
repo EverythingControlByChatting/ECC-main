@@ -46,7 +46,7 @@ class LazySlashResponse(SlashResponse):
         3초 이내에 응답 할 수 없는 경우 사용합니다.
 
         :param response_url: response_url 값을 넣습니다.
-        :param func: 긴 시간의 처리를 하는 함수. `dict`` (Json) 또는 ``str`` 결과를 리턴해야 합니다.
+        :param func: 긴 시간의 처리를 하는 함수. ``dict`` (Json) 또는 ``str`` 결과를 리턴해야 합니다.
         :param args: ``func``의 args
         :param kwargs: ``func``의 kwargs
         :param request_result_func: 응답의 결과를 받는 함수. 하나의 파라매터를 가지고 있어야 합니다.
@@ -58,7 +58,7 @@ class LazySlashResponse(SlashResponse):
             if result is not None \
                     and not isinstance(result, dict) \
                     and not isinstance(result, str):
-                raise TypeError('please check func return type. dict(Json) or str type')
+                raise TypeError('please check func return type. use dict(Json) or str type')
 
             json_data = result if isinstance(result, dict) \
                 else {"response_type": response_type, "text": result}

@@ -34,7 +34,7 @@ def short_delay_message(request):
     print(text)
 
     if p.match(text) is None:
-        return SlashResponse("유요하지 않은 명령입니다.")
+        return SlashResponse("유효하지 않은 명령입니다.")
 
     m = p.search(text)
 
@@ -42,11 +42,11 @@ def short_delay_message(request):
     message = m.group("message")
 
     if delay_time > 60 * 30:
-        return SlashResponse("유요하지 않은 시간입니다.\n30분 이내로 설정해 주십시오")
+        return SlashResponse("유효하지 않은 시간입니다.\n30분 이내로 설정해 주십시오")
 
     def delay_message():
         time.sleep(delay_time)
-        return "_<@" + user_id + "|" + user_name + ">님이 생산한 메시지_\n\n" + message
+        return "_<@" + user_id + "|" + user_name + ">님이 예약한 메시지_\n\n" + message
 
     waiting_message = "*" + str(delay_time) + "* 초 뒤에\n```" + \
                       message + "```\n가 전달됩니다."
