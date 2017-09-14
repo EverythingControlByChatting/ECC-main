@@ -1,14 +1,11 @@
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+import re
+import time
 
+from ECC_main.request import slack_slash_request
 from ECC_main.response import SlashResponse, LazySlashResponse
 
-import time
-import re
 
-
-@csrf_exempt
-@require_POST
+@slack_slash_request
 def wiki_slash_commands(request):
     code = request.POST['text']
     print(code)
@@ -19,8 +16,7 @@ def wiki_slash_commands(request):
     )
 
 
-@csrf_exempt
-@require_POST
+@slack_slash_request
 def short_delay_message(request):
     COMMAND_REGEX = '(?P<second>\d+([.]\d)?)[,]\s?(?P<message>.+)'
 
