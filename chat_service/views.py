@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from ECC_main.request import slack_slash_request
 from ECC_main.response import SlashResponse
-from . import crowling1
+from . import Crowling
 import json
 
 @slack_slash_request

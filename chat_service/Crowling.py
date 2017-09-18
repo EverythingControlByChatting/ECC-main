@@ -9,6 +9,7 @@ def crowlier(context):
     soup = BeautifulSoup(html, 'html.parser')
 
     list_name = soup.select(".dc-restaurant-name")
+    list_info = soup.select(".dc-restaurant-category")
     list_address = soup.select("dc-restaurant-info")
     lists_name = []
     for list1 in list_name:
@@ -18,11 +19,19 @@ def crowlier(context):
         address.append(addr.select('.dc-restaurant-info')[1])
     
     lists_address = []
-    for add in address:
-        data = add.select('.dc-restaurant-info-text')[0].text
+    for addr in address:
+        data = addr.select('.dc-restaurant-info-text')[0].text
         lists_address.append("http://map.daum.net/?q="+GPS.getGPS_coordinate(data))
    
-    return lists_name, lists_address
+    lists_info = []
+    for list1 in list_info:
+        lists_info.append(list1.text)
+    lists_name_info = []
+
+    for i in range(0, len(lists_info)):        
+        lists_name_info.append(lists_name[i]+"("+lists_info[i]+")")
+    print(lists_name_info)
+    return lists_name_info, lists_address
 
 if __name__ == "__main__":
     crowlier(context)
