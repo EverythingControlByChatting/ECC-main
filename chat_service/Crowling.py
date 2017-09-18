@@ -1,8 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-from . import GPS
+from . import coordinate
 
-def crowlier(context):
+def crowlier_lunch(context):
     req = requests.get('http://www.diningcode.com/list.php?query='+ str(context))
 
     html = req.text
@@ -21,7 +21,7 @@ def crowlier(context):
     lists_address = []
     for addr in address:
         data = addr.select('.dc-restaurant-info-text')[0].text
-        lists_address.append("http://map.daum.net/?q="+GPS.getGPS_coordinate(data))
+        lists_address.append("http://map.daum.net/?q="+coordinate.get_address(data))
    
     lists_info = []
     for list1 in list_info:
@@ -30,8 +30,21 @@ def crowlier(context):
 
     for i in range(0, len(lists_info)):        
         lists_name_info.append(lists_name[i]+"("+lists_info[i]+")")
-    print(lists_name_info)
     return lists_name_info, lists_address
 
+def lunch_category():
+    req = requests.get('http://www.diningcode.com/isearch.php?')
+
+    html = req.text
+    soup = BeautifulSoup(html, 'html.parser')
+
+    list_category = soup.select(".dc-search-food-category-list-item")
+    lists_category = []
+    for i in range(0, len(list_category)):
+        lists_category.append(list_category[i].text)
+    
+    return lists_category
+
 if __name__ == "__main__":
-    crowlier(context)
+    crowlier_lunch(context)
+    crowlier_category()

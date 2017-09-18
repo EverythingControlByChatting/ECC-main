@@ -2,7 +2,7 @@ import urllib.request
 import urllib.parse
 import json
 
-def getGPS_coordinate(address):
+def get_address(address):
     address = str(address)
     addre = ['%','2','0']
     count = 0
@@ -20,4 +20,4 @@ def getGPS_coordinate(address):
     return address
 
 if __name__ == "__main__":
-    rtnText = getGPS_coordinate(address)
+    rtnText = get_address(address)
