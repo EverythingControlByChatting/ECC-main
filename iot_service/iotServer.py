@@ -83,7 +83,8 @@ class MyHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         self.send_response(404)
 
-PORT = 80
+PORT = ## PORT NUMBER ##
+
 try:
     server = HTTPServer(('', PORT), MyHandler)
     print('Start server. port:', PORT)
