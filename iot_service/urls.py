@@ -5,5 +5,5 @@ urlpatterns = [
     url(r'^on$', views.on, name='on'),
     url(r'^off$', views.off, name='off'),
     url(r'^super$', views.super, name='super'),
-    url(r'^cold$', views.cold, name='cold'),
+    url(r'^set$', views.set, name='set'),
 ]
