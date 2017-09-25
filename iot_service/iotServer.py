@@ -6,6 +6,7 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import requests
 import urlparse
 import os
+import settings_secret
 
 IR = 'irsend SEND_ONCE '
 MODEL = 'LGE_6711A20015N '
@@ -96,7 +97,7 @@ class MyHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         self.send_response(404)
 
-PORT = 2080
+PORT = settings_secret.PORT
 
 try:
     server = HTTPServer(('', PORT), MyHandler)
