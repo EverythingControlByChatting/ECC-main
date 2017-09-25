@@ -1,6 +1,6 @@
-## Caution!!
-## python 2.7
-## run this code at raspberry pi
+## Caution!! ##
+## python 2.7 ##
+## run this code at raspberry pi ##
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import requests
