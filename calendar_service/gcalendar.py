@@ -179,15 +179,15 @@ class GCalendar:
 
     def help(self):
         text = "To print a Calendar list\r\n" + \
-               "=> /calendarlist\r\n\r\n" + \
+               "=> /calendar-list\r\n\r\n" + \
                "To add an event\r\n" + \
-               "=> /eventinsert summary, body, startTime(YYYY.MM.DD-hh:mm or YYYY.MM.DD), endTime(YYYY.MM.DD-hh:mm or YYYY.MM.DD)\r\n\r\n" + \
+               "=> /event-insert summary, body, startTime(YYYY.MM.DD-hh:mm or YYYY.MM.DD), endTime(YYYY.MM.DD-hh:mm or YYYY.MM.DD)\r\n\r\n" + \
                "To delete an event\r\n" + \
-               "=> /eventdelete summary, event_summary\r\n\r\n" + \
+               "=> /event-delete summary, event_summary\r\n\r\n" + \
                "To update an event(startTime and endTime can be omitted)\r\n" + \
-               "=> /eventupdate summary, event_summary, update_summary, startTime, endTime\r\n\r\n" + \
+               "=> /event-update summary, event_summary, update_summary, startTime, endTime\r\n\r\n" + \
                "To print events\r\n" + \
-               "=> /eventlist summary, maxResult"
+               "=> /event-list summary, maxResult"
         return text
 
 if __name__ == '__main__':
