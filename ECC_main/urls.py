@@ -7,5 +7,5 @@ urlpatterns = [
     url(r'^sample/', include('sample.urls')),
     url(r'^calendar-service/', include('calendar_service.urls')),
     url(r'^chat-service/', include('chat_service.urls')),
-    url(r'^iot_service/', include('iot_service.urls')),
+    url(r'^iot-service/', include('iot_service.urls')),
 ]
