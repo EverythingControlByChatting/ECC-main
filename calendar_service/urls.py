@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^calendar/eventupdate$', views.eventupdate, name='eventupdate'),
     url(r'^calendar/eventlist$', views.eventlist, name='eventlist'),
     url(r'^calendar/help$', views.help, name='help'),
+    url(r'^calendar/redirect', views.redirect, name='redirect')
 ]
