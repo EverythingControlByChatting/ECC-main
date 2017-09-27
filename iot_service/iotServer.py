@@ -6,24 +6,23 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import requests
 import urlparse
 import os
-import settings_secret
 
 IR = 'irsend SEND_ONCE '
-MODEL = 'LGE_6711A20015N '
-ircmd = ' '
+MODEL = ## YOUR MODEL ##+' '
 
 class MyHandler(BaseHTTPRequestHandler):
     
     def do_GET(self):
         parsed_path = urlparse.urlparse(self.path)
 
-        ircmd = ' '
+        #ircmd = ''
         
         if self.path == '/favicon.ico':
-            ircmd=''
+            ircmd = ''
             return 
 
         elif self.path == '/':
+            ircmd = ''
             self.send_response(200)
 
         elif self.path[:3] == '/on':
@@ -41,24 +40,6 @@ class MyHandler(BaseHTTPRequestHandler):
                 print "<ON>"
             except:
                 print "<ON> cmd error"
-            finally:
-                self.send_response(200)
-
-        elif self.path[:4] == '/set':
-            celsius = '22' if self.path[4:] == '' else self.path[4:]
-            
-            if int(celsius)<18:
-                celsius = '18'
-
-            if int(celsius)>30:
-                celsius = '30'
-                
-            try:                
-                ircmd = IR+MODEL+'UN-JEON/JEONG-JI_'+celsius
-                os.system(ircmd)
-                print "<SET>"
-            except:
-                print "<SET> cmd error"
             finally:
                 self.send_response(200)
 
@@ -84,6 +65,7 @@ class MyHandler(BaseHTTPRequestHandler):
 
         else:
             print "cmd not found"
+            ircmd = ''
             self.send_response(405)
 
         self.send_header("Content-type", "text/html")
@@ -91,13 +73,17 @@ class MyHandler(BaseHTTPRequestHandler):
 
         self.wfile.write('<h1>ECC IOT Service</h1>')
         self.wfile.write('<h2 style="color:green">status: green</h2>')
-        self.wfile.write('<h3>[recent command]<h3>')
-        self.wfile.write('<h5>'+ircmd+'<h5>')
+        if ircmd != '':
+            recentCmd = ('<h3>[recent command]<h3><h5>'+ircmd+'<h5>')
+        else:
+            recentCmd = ''
+            
+        self.wfile.write(recentCmd)
     
     def do_POST(self):
         self.send_response(404)
 
-PORT = settings_secret.PORT
+PORT = # YOUR PORT #
 
 try:
     server = HTTPServer(('', PORT), MyHandler)
@@ -107,3 +93,7 @@ try:
 except KeyboardInterrupt:
     print('^C received, shutting down the web server')
     server.socket.close()
+
+except Exception as e:
+    print("Unkown error "+e)
+    server.serve_forever()
