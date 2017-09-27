@@ -29,9 +29,6 @@ def get_Events(calendarInfo, service, maxResult=None):
 class GCalendar:
     def __init__(self, user_id):
         self.credentials = get_credentials(user_id)
-        """
-        여기서 확인 필요.
-        """
         if self.credentials.__class__ !=  str:
             http = self.credentials.authorize(httplib2.Http())
             self.service = discovery.build('calendar', 'v3', http=http)
@@ -50,8 +47,9 @@ class GCalendar:
     def insert_Calendar(self, calendar_name='', text=None, start=None, end=None):
         if self.service != None:
             calendarInfo = [l for l in self.calL if l.get('summary') == calendar_name]
-            if len(calendarInfo) != 1:
-                print('실패하였습니다'); return False
+            
+            if len(calendarInfo) == 0:
+                print('캘린더 검색에 실패하였습니다.'); return 4040
             else:
                 try:
                     dateTime = (lambda x: '-' in x)(start)
@@ -65,6 +63,7 @@ class GCalendar:
                     start = time_format[dateTime].format(d=start_data)
                     end = time_format[dateTime].format(d=end_data)
 
+                    print(calendarInfo,'\n\n\n')
                     calendarId = calendarInfo[0].get('id')
                     body = {
                         "start": {dateTF[dateTime]: start},
@@ -80,7 +79,7 @@ class GCalendar:
                     return True
                 except Exception as e:
                     print(e)
-                    print('실패하였습니다'); return False
+                    return 4040
         else:
             return self.credentials
 
@@ -88,8 +87,8 @@ class GCalendar:
         if self.service != None:
             calendarInfo = [l for l in self.calL if l.get('summary') == calendar_name]
 
-            if len(calendarInfo) != 1:
-                print('이벤트 검색에 실패하였습니다.'); return False
+            if len(calendarInfo) == 0:
+                print('캘린더 검색에 실패하였습니다.'); return 4040
             else:
                 try:
                     events = get_Events(calendarInfo, self.service, maxResult)
@@ -102,7 +101,7 @@ class GCalendar:
                     return eventList
                 except Exception as e:
                     print(e)
-                    print('이벤트 검색에 실패하였습니다.'); return False
+                    return 4040
         else:
             return [self.credentials]
 
