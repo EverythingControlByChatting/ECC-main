@@ -2,10 +2,11 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^calendar/calendarlist$', views.calendarlist, name='calendarlist'),
-    url(r'^calendar/eventinsert$', views.eventinsert, name='eventinsert'),
-    url(r'^calendar/eventdelete$', views.eventdelete, name='eventdelete'),
-    url(r'^calendar/eventupdate$', views.eventupdate, name='eventupdate'),
-    url(r'^calendar/eventlist$', views.eventlist, name='eventlist'),
-    url(r'^calendar/help$', views.help, name='help'),
+    url(r'^calendar/list$', views.calendarlist, name='calendar-list'),
+    url(r'^event/insert$', views.eventinsert, name='event-insert'),
+    url(r'^event/delete$', views.eventdelete, name='event-delete'),
+    url(r'^event/update$', views.eventupdate, name='event-update'),
+    url(r'^event/list$', views.eventlist, name='event-list'),
+    url(r'^calendar/help$', views.help, name='calendar-help'),
+    url(r'^calendar/redirect', views.redirect, name='redirect')
 ]
