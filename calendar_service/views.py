@@ -54,8 +54,10 @@ def eventinsert(request):
             ]
         })
     else:
-        if b == 4040:
+        if b == 4000:
             b = "Error: 캘린더 이름을 확인해주세요."
+        elif b == 5000:
+            b = "Error: 날짜 입력을 확인해주세요."
         result = SlashResponse({
             'attachments': [
                 {
@@ -88,6 +90,10 @@ def eventdelete(request):
             ]
         })
     else:
+        if b == 4000:
+            b = "Error: 캘린더 이름을 확인해주세요."
+        elif b == 5000:
+            b = "Error: 이벤트 Text를 확인해주세요."
         result = SlashResponse({
             'attachments': [
                 {
@@ -122,6 +128,10 @@ def eventupdate(request):
             ]
         })
     else:
+        if b == 4000:
+            b = "Error: 캘린더 이름을 확인해주세요."
+        elif b == 5000:
+            b = "Error: 입력을 다시 확인해주세요."
         result = SlashResponse({
             'attachments': [
                 {
@@ -146,7 +156,7 @@ def eventlist(request):
         b = ["Error: 입력을 확인해주세요"]
     
     if b.__class__ == int:
-        if b == 4040:
+        if b == 4000:
             b = 'Error: 캘린더 이름을 확인해 주세요'
     else:
         b = '\r\n'.join(b).strip()

@@ -49,7 +49,7 @@ class GCalendar:
             calendarInfo = [l for l in self.calL if l.get('summary') == calendar_name]
             
             if len(calendarInfo) == 0:
-                print('캘린더 검색에 실패하였습니다.'); return 4040
+                print('캘린더 검색에 실패하였습니다.'); return 4000
             else:
                 try:
                     dateTime = (lambda x: '-' in x)(start)
@@ -79,7 +79,7 @@ class GCalendar:
                     return True
                 except Exception as e:
                     print(e)
-                    return 4040
+                    return 5000
         else:
             return self.credentials
 
@@ -88,7 +88,7 @@ class GCalendar:
             calendarInfo = [l for l in self.calL if l.get('summary') == calendar_name]
 
             if len(calendarInfo) == 0:
-                print('캘린더 검색에 실패하였습니다.'); return 4040
+                print('캘린더 검색에 실패하였습니다.'); return 4000
             else:
                 try:
                     events = get_Events(calendarInfo, self.service, maxResult)
@@ -101,7 +101,7 @@ class GCalendar:
                     return eventList
                 except Exception as e:
                     print(e)
-                    return 4040
+                    return 5000
         else:
             return [self.credentials]
 
@@ -110,8 +110,8 @@ class GCalendar:
             event_Id=''
             calendarInfo = [l for l in self.calL if l.get('summary') == calendar_name]
 
-            if len(calendarInfo) != 1:
-                print('이벤트 검색에 실패하였습니다.'); return False
+            if len(calendarInfo) == 0:
+                print('캘린더 검색에 실패하였습니다.'); return 4000
             else:
                 try:
                     events = get_Events(calendarInfo, self.service)
@@ -129,7 +129,8 @@ class GCalendar:
                     print('삭제에 성공하였습니다.')
                     return True
                 except Exception as e:
-                    print('이벤트 삭제에 실패하였습니다.'); return False
+                    print(e)
+                    return 5000
         else:
             return self.credentials
 
@@ -138,8 +139,8 @@ class GCalendar:
             event_Id=''
             calendarInfo = [l for l in self.calL if l.get('summary') == calendar_name]
 
-            if len(calendarInfo) != 1:
-                print('이벤트 검색에 실패하였습니다.'); return False
+            if len(calendarInfo) == 0:
+                print('캘린더 검색에 실패하였습니다.'); return 4000
             else:
                 try:
                     events = get_Events(calendarInfo, self.service)
@@ -173,7 +174,7 @@ class GCalendar:
                     return True
                 except Exception as e:
                     print(e)
-                    print('이벤트 수정에 실패하였습니다.'); return False
+                    return 5000
         return self.credentials
 
     def help(self):
