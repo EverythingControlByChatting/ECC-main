@@ -18,7 +18,7 @@ settings_secret.py 내부에 REDIRECT_URI 정보를 추가해 주세요.
 | /event-insert  | http://domain:port/calendar-service/event/insert  | 이벤트를 생성합니다. | calendar-name, text, startTime, endTime |
 | /event-delete  | http://domain:port/calendar-service/event/delete  | 이벤트를 삭제합니다. | calendar-name, text |
 | /event-update  | http://domain:port/calendar-service/event/update  | 이벤트를 수정합니다. | calendar-name, previous-text, update-text(, startTime, endTime) |
-| /event-list    | http://domain:port/calendar-service/event/list    | 이벤트 목록을 출력합니다. | calendar-name, maxResult |
+| /event-list    | http://domain:port/calendar-service/event/list    | 이벤트 목록을 출력합니다. | calendar-name(, maxResult) |
 
 startTime과 endTime은 시작과 종료 시간을 의미합니다.
 시간은 다음 두가지 방법으로 표현할 수 있습니다.
