@@ -47,9 +47,9 @@ class GCalendar:
         else:
             return [self.credentials]
 
-    def insert_Calendar(self, summary='', body=None, start=None, end=None):
+    def insert_Calendar(self, calendar_name='', text=None, start=None, end=None):
         if self.service != None:
-            calendarInfo = [l for l in self.calL if l.get('summary') == summary]
+            calendarInfo = [l for l in self.calL if l.get('summary') == calendar_name]
             if len(calendarInfo) != 1:
                 print('실패하였습니다'); return False
             else:
@@ -69,7 +69,7 @@ class GCalendar:
                     body = {
                         "start": {dateTF[dateTime]: start},
                         "end": {dateTF[dateTime]: end},
-                        "summary": body
+                        "summary": text
                     }
                     self.service.events().insert(
                         calendarId=calendarId,
@@ -84,9 +84,9 @@ class GCalendar:
         else:
             return self.credentials
 
-    def list_Calendar(self, summary='', maxResult=10):
+    def list_Calendar(self, calendar_name='', maxResult=10):
         if self.service != None:
-            calendarInfo = [l for l in self.calL if l.get('summary') == summary]
+            calendarInfo = [l for l in self.calL if l.get('summary') == calendar_name]
 
             if len(calendarInfo) != 1:
                 print('이벤트 검색에 실패하였습니다.'); return False
@@ -106,10 +106,10 @@ class GCalendar:
         else:
             return [self.credentials]
 
-    def delete_Calendar(self, summary='', event_summary=''):
+    def delete_Calendar(self, calendar_name='', text=''):
         if self.service != None:
             event_Id=''
-            calendarInfo = [l for l in self.calL if l.get('summary') == summary]
+            calendarInfo = [l for l in self.calL if l.get('summary') == calendar_name]
 
             if len(calendarInfo) != 1:
                 print('이벤트 검색에 실패하였습니다.'); return False
@@ -118,7 +118,7 @@ class GCalendar:
                     events = get_Events(calendarInfo, self.service)
                     
                     for event in events:
-                        if event.get('summary') == event_summary:
+                        if event.get('summary') == text:
                             event_Id=event.get('id')
                             break
 
@@ -134,10 +134,10 @@ class GCalendar:
         else:
             return self.credentials
 
-    def update_Calendar(self, summary='', event_summary='', update_summary='', sndate=['','']):
+    def update_Calendar(self, calendar_name='', previous_text='', update_summary='', sndate=['','']):
         if self.service != None:
             event_Id=''
-            calendarInfo = [l for l in self.calL if l.get('summary') == summary]
+            calendarInfo = [l for l in self.calL if l.get('summary') == calendar_name]
 
             if len(calendarInfo) != 1:
                 print('이벤트 검색에 실패하였습니다.'); return False
@@ -146,7 +146,7 @@ class GCalendar:
                     events = get_Events(calendarInfo, self.service)
 
                     for event in events:
-                        if event.get('summary') == event_summary:
+                        if event.get('summary') == previous_text:
                             event_Id=event.get('id')
                             if sndate==['','']:
                                 if 'date' in event.get('start', []):
@@ -181,13 +181,13 @@ class GCalendar:
         text = "To print a Calendar list\r\n" + \
                "=> /calendar-list\r\n\r\n" + \
                "To add an event\r\n" + \
-               "=> /event-insert summary, body, startTime(YYYY.MM.DD-hh:mm or YYYY.MM.DD), endTime(YYYY.MM.DD-hh:mm or YYYY.MM.DD)\r\n\r\n" + \
+               "=> /event-insert calendar-name, text, startTime(YYYY.MM.DD-hh:mm or YYYY.MM.DD), endTime(YYYY.MM.DD-hh:mm or YYYY.MM.DD)\r\n\r\n" + \
                "To delete an event\r\n" + \
-               "=> /event-delete summary, event_summary\r\n\r\n" + \
+               "=> /event-delete calendar-name, text\r\n\r\n" + \
                "To update an event(startTime and endTime can be omitted)\r\n" + \
-               "=> /event-update summary, event_summary, update_summary, startTime, endTime\r\n\r\n" + \
+               "=> /event-update calendar-name, previous-text, update_summary, startTime, endTime\r\n\r\n" + \
                "To print events\r\n" + \
-               "=> /event-list summary, maxResult"
+               "=> /event-list calendar-name, maxResult"
         return text
 
 if __name__ == '__main__':

@@ -15,7 +15,12 @@ settings_secret.py 내부에 REDIRECT_URI 정보를 추가해 주세요.
 | :------ | :---------- | :--- |
 | /calendar-help | http://domain:port/calendar-service/calendar/help | |
 | /calendar-list | http://domain:port/calendar-service/calendar/list | |
-| /event-insert  | http://domain:port/calendar-service/event/insert  | summary, body, startTime, endTime |
-| /event-delete  | http://domain:port/calendar-service/event/delete  | summary, event_summary |
-| /event-update  | http://domain:port/calendar-service/event/update  | summary, event_summary, update_summary(, startTime, endTime) |
-| /event-list    | http://domain:port/calendar-service/event/list    | summary, maxResult |
+| /event-insert  | http://domain:port/calendar-service/event/insert  | calendar-name, text, startTime, endTime |
+| /event-delete  | http://domain:port/calendar-service/event/delete  | calendar-name, text |
+| /event-update  | http://domain:port/calendar-service/event/update  | calendar-name, previous-text, update-text(, startTime, endTime) |
+| /event-list    | http://domain:port/calendar-service/event/list    | calendar-name, maxResult |
+
+startTime과 endTime은 시작과 종료 시간을 의미합니다.
+시간은 다음 두가지 방법으로 표현할 수 있습니다.
+1. 2017.09.15-06:00
+2. 2017.09.15
