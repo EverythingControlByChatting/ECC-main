@@ -7,7 +7,12 @@
 
 인증정보를 생성하고 json 파일을 생성하여 장고 폴더 안에 넣어주세요.
 
-settings_secret.py 내부에 REDIRECT_URI 정보를 추가해 주세요.
+settings_secret.py 내부에 다음의 정보를 추가해주세요
+
+REDIRECT_URI = "Your Redirect_Uri"
+CLIENT_SECRET_FILE = "client_secret.json"
+PROJECT_NAME = "Your Project Name"
+SCOPES = "https://www.googleapis.com/auth/calendar"
 - - -
 다음은 슬랙봇 command 정보입니다.
 

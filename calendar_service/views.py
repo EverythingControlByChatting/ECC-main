@@ -8,9 +8,6 @@ import httplib2, os, codecs
 from apiclient.discovery import build
 
 tf = {False:'실패 하였습니다',True:'성공 하였습니다',}
-SCOPES = 'https://www.googleapis.com/auth/calendar'
-CLIENT_SECRET_FILE = 'client_secret.json'
-PROJECT_NAME = 'Google Calendar'
 
 def get_credential(request):
     user_id = request.POST['user_id']
@@ -192,8 +189,8 @@ def help(request):
 def redirect(request):
     auth_code = request.GET['code']
     user_id = request.GET['state']
-    flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, scope=SCOPES, redirect_uri=settings_secret.REDIRECT_URI)
-    flow.user_agent = PROJECT_NAME
+    flow = client.flow_from_clientsecrets(settings_secret.CLIENT_SECRET_FILE, scope=settings_secret.SCOPES, redirect_uri=settings_secret.REDIRECT_URI)
+    flow.user_agent = settings_secret.PROJECT_NAME
     flow.params['access_type'] = 'offline'
     auth_uri = flow.step1_get_authorize_url()
     credentials = flow.step2_exchange(auth_code)

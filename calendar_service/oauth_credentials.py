@@ -11,10 +11,6 @@ try:
 except ImportError:
     flags = None
 
-SCOPES = 'https://www.googleapis.com/auth/calendar'
-CLIENT_SECRET_FILE = 'client_secret.json'
-PROJECT_NAME = 'Google Calendar'
-
 def oauth_credentials(origin_function):
     def decorator(*args, **kwargs):
         print("user_id: {}".format(args[0]))
@@ -28,8 +24,8 @@ def oauth_credentials(origin_function):
         credentials = store.get()
 
         if not credentials or credentials.invalid:
-            flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, scope=SCOPES, redirect_uri=settings_secret.REDIRECT_URI)
-            flow.user_agent = PROJECT_NAME
+            flow = client.flow_from_clientsecrets(settings_secret.CLIENT_SECRET_FILE, scope=settings_secret.SCOPES, redirect_uri=settings_secret.REDIRECT_URI)
+            flow.user_agent = settings_secret.PROJECT_NAME
             flow.params['access_type'] = 'offline'
 
             auth_uri = flow.step1_get_authorize_url()
