@@ -29,9 +29,6 @@ def get_Events(calendarInfo, service, maxResult=None):
 class GCalendar:
     def __init__(self, user_id):
         self.credentials = get_credentials(user_id)
-        """
-        여기서 확인 필요.
-        """
         if self.credentials.__class__ !=  str:
             http = self.credentials.authorize(httplib2.Http())
             self.service = discovery.build('calendar', 'v3', http=http)
@@ -47,11 +44,12 @@ class GCalendar:
         else:
             return [self.credentials]
 
-    def insert_Calendar(self, summary='', body=None, start=None, end=None):
+    def insert_Calendar(self, calendar_name='', text=None, start=None, end=None):
         if self.service != None:
-            calendarInfo = [l for l in self.calL if l.get('summary') == summary]
-            if len(calendarInfo) != 1:
-                print('실패하였습니다'); return False
+            calendarInfo = [l for l in self.calL if l.get('summary') == calendar_name]
+            
+            if len(calendarInfo) == 0:
+                print('캘린더 검색에 실패하였습니다.'); return 4000
             else:
                 try:
                     dateTime = (lambda x: '-' in x)(start)
@@ -65,11 +63,12 @@ class GCalendar:
                     start = time_format[dateTime].format(d=start_data)
                     end = time_format[dateTime].format(d=end_data)
 
+                    print(calendarInfo,'\n\n\n')
                     calendarId = calendarInfo[0].get('id')
                     body = {
                         "start": {dateTF[dateTime]: start},
                         "end": {dateTF[dateTime]: end},
-                        "summary": body
+                        "summary": text
                     }
                     self.service.events().insert(
                         calendarId=calendarId,
@@ -80,16 +79,16 @@ class GCalendar:
                     return True
                 except Exception as e:
                     print(e)
-                    print('실패하였습니다'); return False
+                    return 5000
         else:
             return self.credentials
 
-    def list_Calendar(self, summary='', maxResult=10):
+    def list_Calendar(self, calendar_name='', maxResult=10):
         if self.service != None:
-            calendarInfo = [l for l in self.calL if l.get('summary') == summary]
+            calendarInfo = [l for l in self.calL if l.get('summary') == calendar_name]
 
-            if len(calendarInfo) != 1:
-                print('이벤트 검색에 실패하였습니다.'); return False
+            if len(calendarInfo) == 0:
+                print('캘린더 검색에 실패하였습니다.'); return 4000
             else:
                 try:
                     events = get_Events(calendarInfo, self.service, maxResult)
@@ -102,23 +101,23 @@ class GCalendar:
                     return eventList
                 except Exception as e:
                     print(e)
-                    print('이벤트 검색에 실패하였습니다.'); return False
+                    return 5000
         else:
             return [self.credentials]
 
-    def delete_Calendar(self, summary='', event_summary=''):
+    def delete_Calendar(self, calendar_name='', text=''):
         if self.service != None:
             event_Id=''
-            calendarInfo = [l for l in self.calL if l.get('summary') == summary]
+            calendarInfo = [l for l in self.calL if l.get('summary') == calendar_name]
 
-            if len(calendarInfo) != 1:
-                print('이벤트 검색에 실패하였습니다.'); return False
+            if len(calendarInfo) == 0:
+                print('캘린더 검색에 실패하였습니다.'); return 4000
             else:
                 try:
                     events = get_Events(calendarInfo, self.service)
                     
                     for event in events:
-                        if event.get('summary') == event_summary:
+                        if event.get('summary') == text:
                             event_Id=event.get('id')
                             break
 
@@ -130,23 +129,24 @@ class GCalendar:
                     print('삭제에 성공하였습니다.')
                     return True
                 except Exception as e:
-                    print('이벤트 삭제에 실패하였습니다.'); return False
+                    print(e)
+                    return 5000
         else:
             return self.credentials
 
-    def update_Calendar(self, summary='', event_summary='', update_summary='', sndate=['','']):
+    def update_Calendar(self, calendar_name='', previous_text='', update_summary='', sndate=['','']):
         if self.service != None:
             event_Id=''
-            calendarInfo = [l for l in self.calL if l.get('summary') == summary]
+            calendarInfo = [l for l in self.calL if l.get('summary') == calendar_name]
 
-            if len(calendarInfo) != 1:
-                print('이벤트 검색에 실패하였습니다.'); return False
+            if len(calendarInfo) == 0:
+                print('캘린더 검색에 실패하였습니다.'); return 4000
             else:
                 try:
                     events = get_Events(calendarInfo, self.service)
 
                     for event in events:
-                        if event.get('summary') == event_summary:
+                        if event.get('summary') == previous_text:
                             event_Id=event.get('id')
                             if sndate==['','']:
                                 if 'date' in event.get('start', []):
@@ -174,20 +174,20 @@ class GCalendar:
                     return True
                 except Exception as e:
                     print(e)
-                    print('이벤트 수정에 실패하였습니다.'); return False
+                    return 5000
         return self.credentials
 
     def help(self):
         text = "To print a Calendar list\r\n" + \
                "=> /calendar-list\r\n\r\n" + \
                "To add an event\r\n" + \
-               "=> /event-insert summary, body, startTime(YYYY.MM.DD-hh:mm or YYYY.MM.DD), endTime(YYYY.MM.DD-hh:mm or YYYY.MM.DD)\r\n\r\n" + \
+               "=> /event-insert calendar-name, text, startTime(YYYY.MM.DD-hh:mm or YYYY.MM.DD), endTime(YYYY.MM.DD-hh:mm or YYYY.MM.DD)\r\n\r\n" + \
                "To delete an event\r\n" + \
-               "=> /event-delete summary, event_summary\r\n\r\n" + \
+               "=> /event-delete calendar-name, text\r\n\r\n" + \
                "To update an event(startTime and endTime can be omitted)\r\n" + \
-               "=> /event-update summary, event_summary, update_summary, startTime, endTime\r\n\r\n" + \
+               "=> /event-update calendar-name, previous-text, update_summary, startTime, endTime\r\n\r\n" + \
                "To print events\r\n" + \
-               "=> /event-list summary, maxResult"
+               "=> /event-list calendar-name, maxResult"
         return text
 
 if __name__ == '__main__':

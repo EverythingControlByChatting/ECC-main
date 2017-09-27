@@ -9,7 +9,7 @@ from apiclient.discovery import build
 
 tf = {False:'실패 하였습니다',True:'성공 하였습니다',}
 SCOPES = 'https://www.googleapis.com/auth/calendar'
-CLIENT_SECRET_FILE = 'calendar_service/client_secret.json'
+CLIENT_SECRET_FILE = 'client_secret.json'
 PROJECT_NAME = 'Google Calendar'
 
 def get_credential(request):
@@ -37,10 +37,11 @@ def eventinsert(request):
     google_calendar = get_credential(request)
     data = [l.strip() for l in request.POST['text'].split(',') if l.strip()]
 
-    if len(data) != 4:
-        b = False
+    if len(data) == 4:
+        b = google_calendar.insert_Calendar(calendar_name=data[0], text=data[1], start=data[2], end=data[3])
     else:
-        b = google_calendar.insert_Calendar(summary=data[0], body=data[1], start=data[2], end=data[3])
+        data.append('Null')
+        b = False
     
     if type(b) == bool:
         result = SlashResponse({
@@ -53,6 +54,10 @@ def eventinsert(request):
             ]
         })
     else:
+        if b == 4000:
+            b = "Error: 캘린더 이름을 확인해주세요."
+        elif b == 5000:
+            b = "Error: 날짜 입력을 확인해주세요."
         result = SlashResponse({
             'attachments': [
                 {
@@ -72,7 +77,7 @@ def eventdelete(request):
     if len(data) != 2:
         b = False
     else:
-        b = google_calendar.delete_Calendar(summary=data[0],event_summary=data[1])
+        b = google_calendar.delete_Calendar(calendar_name=data[0],text=data[1])
 
     if type(b) == bool:
         result = SlashResponse({
@@ -85,6 +90,10 @@ def eventdelete(request):
             ]
         })
     else:
+        if b == 4000:
+            b = "Error: 캘린더 이름을 확인해주세요."
+        elif b == 5000:
+            b = "Error: 이벤트 Text를 확인해주세요."
         result = SlashResponse({
             'attachments': [
                 {
@@ -102,9 +111,9 @@ def eventupdate(request):
     data = [l.strip() for l in request.POST['text'].split(',') if l.strip()]
     
     if len(data) == 3:
-        b = google_calendar.update_Calendar(summary=data[0],event_summary=data[1],update_summary=data[2])
+        b = google_calendar.update_Calendar(calendar_name=data[0],previous_text=data[1],update_summary=data[2])
     elif len(data) == 5:
-        b = google_calendar.update_Calendar(summary=data[0],event_summary=data[1],update_summary=data[2], sndate=[data[3],data[4]])
+        b = google_calendar.update_Calendar(calendar_name=data[0],previous_text=data[1],update_summary=data[2], sndate=[data[3],data[4]])
     else:
         b = False
     
@@ -119,6 +128,10 @@ def eventupdate(request):
             ]
         })
     else:
+        if b == 4000:
+            b = "Error: 캘린더 이름을 확인해주세요."
+        elif b == 5000:
+            b = "Error: 입력을 다시 확인해주세요."
         result = SlashResponse({
             'attachments': [
                 {
@@ -134,15 +147,21 @@ def eventupdate(request):
 def eventlist(request):
     google_calendar = get_credential(request)
     data = [l.strip() for l in request.POST['text'].split(',') if l.strip()]
-
-    if len(data) != 2:
-        b = []
+    if len(data) == 2:
+        data[1] = int(float(data[1]))
+        b = google_calendar.list_Calendar(calendar_name=data[0], maxResult=data[1])
+    elif len(data) == 1:
+        b = google_calendar.list_Calendar(calendar_name=data[0])
     else:
-        b = google_calendar.list_Calendar(summary=data[0], maxResult=int(data[1]))
+        b = ["Error: 입력을 확인해주세요"]
     
-    b = '\r\n'.join(b).strip()
-    if not b.strip():
-        b = '출력할 데이터가 없습니다'
+    if b.__class__ == int:
+        if b == 4000:
+            b = 'Error: 캘린더 이름을 확인해 주세요'
+    else:
+        b = '\r\n'.join(b).strip()
+        if not b.strip():
+            b = '출력할 데이터가 없습니다'
 
     result = SlashResponse({
         'attachments': [
