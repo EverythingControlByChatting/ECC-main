@@ -128,3 +128,6 @@ SLACK_VERIFICATION_TOKEN = settings_secret.SLACK_VERIFICATION_TOKEN
 SLACK_CLIENT_ID = settings_secret.SLACK_CLIENT_ID
 SLACK_CLIENT_SECRET = settings_secret.SLACK_CLIENT_SECRET
 
+CLIENT_SECRET_FILE = "client_secret.json"
+PROJECT_NAME = "Google Calendar"
+SCOPES = "https://www.googleapis.com/auth/calendar"

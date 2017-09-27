@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse
 from ECC_main.request import slack_slash_request
 from ECC_main.response import SlashResponse, LazySlashResponse
+from ECC_main import settings
 from . import gcalendar
 from oauth2client import client
 import settings_secret
@@ -189,8 +190,8 @@ def help(request):
 def redirect(request):
     auth_code = request.GET['code']
     user_id = request.GET['state']
-    flow = client.flow_from_clientsecrets(settings_secret.CLIENT_SECRET_FILE, scope=settings_secret.SCOPES, redirect_uri=settings_secret.REDIRECT_URI)
-    flow.user_agent = settings_secret.PROJECT_NAME
+    flow = client.flow_from_clientsecrets(settings.CLIENT_SECRET_FILE, scope=settings.SCOPES, redirect_uri=settings_secret.REDIRECT_URI)
+    flow.user_agent = settings.PROJECT_NAME
     flow.params['access_type'] = 'offline'
     auth_uri = flow.step1_get_authorize_url()
     credentials = flow.step2_exchange(auth_code)
