@@ -51,7 +51,7 @@
     
     SLACK_CLIENT_ID = # Basic Information -> Client ID
     SLACK_CLIENT_SECRET = # Basic Information -> Client Secret
-    TEST_ADDRESS = # Basic Information -> Verification Token
+    TEST_ADDRESS = # Django host:port name
     
     HOST = # Raspberry Pi host
     PORT = # Raspberry Pi port
