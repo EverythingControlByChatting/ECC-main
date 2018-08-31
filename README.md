@@ -63,7 +63,7 @@
 
 1. run server
     ```bash
-    python3 manage.py rserver 0.0.0.0:8000
+    python3 manage.py runserver 0.0.0.0:8000
     ```
 2. install slack app(Authorize)
     
