@@ -70,7 +70,7 @@
     http://serverDomain:port/main/slack/add
 
     * DisallowedHost at /main/slack/add 뜰 경우 해결 방법
-    - https://github.com/EverythingControlByChatting/ECC-main/issues/34
+      - https://github.com/EverythingControlByChatting/ECC-main/issues/34
 
     * serverDomain이 없으면 본인 IP주소 입력
 
