@@ -1,9 +1,9 @@
-from django.conf.urls import url
+from django.urls import path
 from . import views
 
 urlpatterns = [
-    url(r'^acon$', views.acon, name='acon'),
-    url(r'^acoff$', views.acoff, name='acoff'),
-    url(r'^acsuper$', views.acsuper, name='acsuper'),
-    url(r'^achelp$', views.achelp, name='achelp'),
+    path('acon', views.acon, name='acon'),
+    path('acoff', views.acoff, name='acoff'),
+    path('acsuper', views.acsuper, name='acsuper'),
+    path('achelp', views.achelp, name='achelp'),
 ]
