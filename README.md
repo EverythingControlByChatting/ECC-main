@@ -76,3 +76,7 @@
 
 3. set Redirect URLs
    -  add http://serverDomain:port/main/slack/oauth
+
+## Develop
+
+* IDE내의 Pylint플러그인 사용 적극 권장 (pep8문제가 없어야 합니다.)
