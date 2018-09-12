@@ -10,9 +10,9 @@
 
 ### Prerequisites
 
-* Python3
+* Python >= 3.6
 * Raspberry Pi
-  - Python2.7
+  - Python == 2.7
   - Infrared sensor
 
 ### Installing
