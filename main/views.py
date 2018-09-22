@@ -1,8 +1,5 @@
 from django.conf import settings
 from django.shortcuts import render, HttpResponse
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-import request
 import json
 import requests
 
