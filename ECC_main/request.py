@@ -9,6 +9,7 @@ import ECC_main.settings
 import json
 
 
+
 def slack_slash_request(func):
     @csrf_exempt
     @require_POST

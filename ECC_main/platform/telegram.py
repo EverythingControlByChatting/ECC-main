@@ -48,7 +48,7 @@ class Telegram(PlatformBase):
         return str(json_body['message']['from']['id'])
         
     def _get_user_name(json_body):
-        return json_body['message']['from']['username']
+        return json_body['message']['from']['last_name']
         
     def _get_json_list(request_body):
         return json.loads(request_body)
