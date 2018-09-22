@@ -185,7 +185,7 @@ class GCalendar:
                "To delete an event\r\n" + \
                "=> /event-delete calendar-name, text\r\n\r\n" + \
                "To update an event(startTime and endTime can be omitted)\r\n" + \
-               "=> /event-update calendar-name, previous-text, update_summary, startTime, endTime\r\n\r\n" + \
+               "=> /event-update calendar-name, previous-text, update-summary, startTime, endTime\r\n\r\n" + \
                "To print events\r\n" + \
                "=> /event-list calendar-name, maxResult"
         return text

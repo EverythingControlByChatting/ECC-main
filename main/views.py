@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.shortcuts import render, HttpResponse
-
 import json
 import requests
 
@@ -26,3 +25,4 @@ def slack_oauth(request):
         return HttpResponse('Bot added to your Slack team!')
     else:
         return HttpResponse(status=403)
+        
