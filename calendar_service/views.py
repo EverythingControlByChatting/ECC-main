@@ -21,9 +21,10 @@ def get_credential(request):
 def calendarlist(request):
     google_calendar = get_credential(request)
     calendarList = '\r\n'.join(google_calendar.get_Calendar())
-    if request['platfrom'] is Telegram.platfrom():
+    if request['platfrom'] is Telegram.platform():
         result = "*calender list*\n\n"
         result = result + calendarList
+        print(calendarList)
         slashResponse = SlashResponse(
             result
         )
@@ -53,7 +54,7 @@ def eventinsert(request):
         b = False
 
     if type(b) == bool:
-        if request['platfrom'] is Telegram.platfrom():
+        if request['platform'] is Telegram.platform():
             result = "*calender Insert*\n\n"
             result = result + data[1] +"이벤트 추가에 " + tf[b]
             slashResponse = SlashResponse(
@@ -75,7 +76,7 @@ def eventinsert(request):
         elif b == 5000:
             b = "Error: 날짜 입력을 확인해주세요."
         
-        if request['platfrom'] is Telegram.platfrom():
+        if request['platform'] is Telegram.platform():
             result = "*calender Insert*\n\n"
             result = result + b
             slashResponse = SlashResponse(
@@ -105,7 +106,7 @@ def eventdelete(request):
 
     if type(b) == bool:
         
-        if request['platfrom'] is Telegram.platfrom():
+        if request['platform'] is Telegram.platform():
             result = "*calender delete*\n\n"
             result = result + data[1] +'이벤트 삭제에 ' + tf[b]
             slashResponse = SlashResponse(
@@ -127,7 +128,7 @@ def eventdelete(request):
         elif b == 5000:
             b = "Error: 이벤트 Text를 확인해주세요."
         
-        if request['platfrom'] is Telegram.platfrom():
+        if request['platform'] is Telegram.platform():
             result = "*calender delete*\n\n"
             result = result + b
             slashResponse = SlashResponse(
@@ -159,7 +160,7 @@ def eventupdate(request):
     
     if type(b) == bool:
         
-        if request['platfrom'] is Telegram.platfrom():
+        if request['platform'] is Telegram.platform():
             result = "*calender update*\n\n"
             result = result + data[1]+' 에서 '+data[2]+'로'+' 이벤트 수정에 '+tf[b]
             slashResponse = SlashResponse(
@@ -182,7 +183,7 @@ def eventupdate(request):
         elif b == 5000:
             b = "Error: 입력을 다시 확인해주세요."
             
-        if request['platfrom'] is Telegram.platfrom():
+        if request['platform'] is Telegram.platform():
             result = "*calender update*\n\n"
             result = result + b
             slashResponse = SlashResponse(
@@ -220,7 +221,7 @@ def eventlist(request):
         b = '\r\n'.join(b).strip()
         if not b.strip():
             b = '출력할 데이터가 없습니다'
-    if request['platfrom'] is Telegram.platfrom():
+    if request['platform'] is Telegram.platform():
         result = "*이벤트 리스트*\n\n"
         result = result + b
         slashResponse = SlashResponse(
@@ -242,7 +243,7 @@ def eventlist(request):
 def help(request):
     google_calendar = get_credential(request)
     text = google_calendar.help()
-    if request['platfrom'] is Telegram.platfrom():
+    if request['platform'] is Telegram.platform():
         result = "*calender help*\n\n"
         result = result + text.replace('-', '\_')
         print(result)

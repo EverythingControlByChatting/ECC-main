@@ -53,7 +53,7 @@ class Slack(PlatformBase):
             
         threading.Thread(target=async_func, args=args, kwargs=kwargs).start()
    
-    def platfrom():
+    def platform():
         return 'slack'
       
     def _get_chat_id(json_body):# return channel_id
@@ -72,12 +72,12 @@ class Slack(PlatformBase):
         return json_body['response_url']
     
     def _func_start(json_body, func):
-        platfrom = Slack.platfrom()
+        platform = Slack.platfrom()
         text = Slack._get_text(json_body)
         user_name = Slack._get_user_name(json_body)
         user_id = Slack._get_user_id(json_body)
         
-        baseRequest = BaseRequest(platfrom, text, user_name, user_id)
+        baseRequest = BaseRequest(platform, text, user_name, user_id)
         return func(baseRequest)
         
     def _get_text(json_body):
