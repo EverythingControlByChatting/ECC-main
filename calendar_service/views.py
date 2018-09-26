@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse
-from ECC_main.request import slack_slash_request
+from ECC_main.request import slash_request
 from ECC_main.response import SlashResponse, LazySlashResponse
 from ECC_main import settings
 from . import gcalendar
@@ -8,69 +8,96 @@ import settings_secret
 import httplib2, os, codecs
 from apiclient.discovery import build
 
+from ECC_main.platform.telegram import Telegram
+
 tf = {False:'실패 하였습니다',True:'성공 하였습니다',}
 
 def get_credential(request):
-    user_id = request.POST['user_id']
+    user_id = request['user_id']
     google_calendar = gcalendar.GCalendar(user_id)
     return google_calendar
 
-@slack_slash_request
+@slash_request
 def calendarlist(request):
     google_calendar = get_credential(request)
     calendarList = '\r\n'.join(google_calendar.get_Calendar())
-        
-    return SlashResponse({
-        'attachments': [
+    if request['platform'] is Telegram.platform():
+        result = "*calender list*\n\n"
+        result = result + calendarList
+        print(calendarList)
+        slashResponse = SlashResponse(
+            result
+        )
+    else:
+        slashResponse = SlashResponse(
             {
-                'pretext': '캘린더 리스트',
-                'text':calendarList,
-                'color': '#7CD197',
+            'attachments': [
+                {
+                    'pretext': '캘린더 리스트',
+                    'text':calendarList,
+                    'color': '#7CD197',
+                }
+            ]
             }
-        ]
-    })
+        )
+    return slashResponse;
 
-@slack_slash_request
+@slash_request
 def eventinsert(request):
     google_calendar = get_credential(request)
-    data = [l.strip() for l in request.POST['text'].split(',') if l.strip()]
+    data = [l.strip() for l in request['text'].split(',') if l.strip()]
 
     if len(data) == 4:
         b = google_calendar.insert_Calendar(calendar_name=data[0], text=data[1], start=data[2], end=data[3])
     else:
         data.append('Null')
         b = False
-    
+
     if type(b) == bool:
-        result = SlashResponse({
-            'attachments': [
-                {
-                    'pretext': '이벤트 추가',
-                    'text':data[1]+' 이벤트 추가에 '+tf[b],
-                    'color': '#7CD197',
-                }
-            ]
-        })
+        if request['platform'] is Telegram.platform():
+            result = "*calender Insert*\n\n"
+            result = result + data[1] +"이벤트 추가에 " + tf[b]
+            slashResponse = SlashResponse(
+                result
+            )
+        else:
+            slashResponse = SlashResponse({
+                'attachments': [
+                    {
+                        'pretext': '이벤트 추가',
+                        'text':data[1]+' 이벤트 추가에 '+tf[b],
+                        'color': '#7CD197',
+                    }
+                ]
+            })
     else:
         if b == 4000:
             b = "Error: 캘린더 이름을 확인해주세요."
         elif b == 5000:
             b = "Error: 날짜 입력을 확인해주세요."
-        result = SlashResponse({
-            'attachments': [
-                {
-                    'pretext': '이벤트 추가',
-                    'text':b,
-                    'color': '#7CD197',
-                }
-            ]
-        })
-    return result
+        
+        if request['platform'] is Telegram.platform():
+            result = "*calender Insert*\n\n"
+            result = result + b
+            slashResponse = SlashResponse(
+                result
+            )
+        else:
+            slashResponse = SlashResponse({
+                'attachments': [
+                    {
+                        'pretext': '이벤트 추가',
+                        'text':b,
+                        'color': '#7CD197',
+                    }
+                ]
+            })
+    return slashResponse
 
-@slack_slash_request
+@slash_request
 def eventdelete(request):
     google_calendar = get_credential(request)
-    data = [l.strip() for l in request.POST['text'].split(',') if l.strip()]
+    data = [l.strip() for l in request['text'].split(',') if l.strip()]
     
     if len(data) != 2:
         b = False
@@ -78,35 +105,51 @@ def eventdelete(request):
         b = google_calendar.delete_Calendar(calendar_name=data[0],text=data[1])
 
     if type(b) == bool:
-        result = SlashResponse({
-            'attachments': [
-                {
-                    'pretext': '이벤트 삭제',
-                    'text':data[1]+' 이벤트 삭제에 '+tf[b],
-                    'color': '#7CD197',
-                }
-            ]
-        })
+        
+        if request['platform'] is Telegram.platform():
+            result = "*calender delete*\n\n"
+            result = result + data[1] +'이벤트 삭제에 ' + tf[b]
+            slashResponse = SlashResponse(
+                result
+            )
+        else:
+            slashResponse = SlashResponse({
+                'attachments': [
+                    {
+                        'pretext': '이벤트 삭제',
+                        'text':data[1]+' 이벤트 삭제에 '+tf[b],
+                        'color': '#7CD197',
+                    }
+                ]
+            })
     else:
         if b == 4000:
             b = "Error: 캘린더 이름을 확인해주세요."
         elif b == 5000:
             b = "Error: 이벤트 Text를 확인해주세요."
-        result = SlashResponse({
-            'attachments': [
-                {
-                    'pretext': '이벤트 삭제',
-                    'text':b,
-                    'color': '#7CD197',
-                }
-            ]
-        })
-    return result
+        
+        if request['platform'] is Telegram.platform():
+            result = "*calender delete*\n\n"
+            result = result + b
+            slashResponse = SlashResponse(
+                result
+            )
+        else:
+            slashResponse = SlashResponse({
+                'attachments': [
+                    {
+                        'pretext': '이벤트 삭제',
+                        'text':b,
+                        'color': '#7CD197',
+                    }
+                ]
+            })
+    return slashResponse
 
-@slack_slash_request
+@slash_request
 def eventupdate(request):
     google_calendar = get_credential(request)
-    data = [l.strip() for l in request.POST['text'].split(',') if l.strip()]
+    data = [l.strip() for l in request['text'].split(',') if l.strip()]
     
     if len(data) == 3:
         b = google_calendar.update_Calendar(calendar_name=data[0],previous_text=data[1],update_summary=data[2])
@@ -116,35 +159,53 @@ def eventupdate(request):
         b = False
     
     if type(b) == bool:
-        result = SlashResponse({
-            'attachments': [
-                {
-                    'pretext': '이벤트 수정',
-                    'text':data[1]+' 에서 '+data[2]+'로'+' 이벤트 수정에 '+tf[b],
-                    'color': '#7CD197',
-                }
-            ]
-        })
+        
+        if request['platform'] is Telegram.platform():
+            result = "*calender update*\n\n"
+            result = result + data[1]+' 에서 '+data[2]+'로'+' 이벤트 수정에 '+tf[b]
+            slashResponse = SlashResponse(
+                result
+            )
+            
+        else:
+            slashResponse = SlashResponse({
+                'attachments': [
+                    {
+                        'pretext': '이벤트 수정',
+                        'text':data[1]+' 에서 '+data[2]+'로'+' 이벤트 수정에 '+tf[b],
+                        'color': '#7CD197',
+                    }
+                ]
+            })
     else:
         if b == 4000:
             b = "Error: 캘린더 이름을 확인해주세요."
         elif b == 5000:
             b = "Error: 입력을 다시 확인해주세요."
-        result = SlashResponse({
-            'attachments': [
-                {
-                    'pretext': '이벤트 수정',
-                    'text':b,
-                    'color': '#7CD197',
-                }
-            ]
-        })
-    return result
+            
+        if request['platform'] is Telegram.platform():
+            result = "*calender update*\n\n"
+            result = result + b
+            slashResponse = SlashResponse(
+                result
+            )
+        else:
+            slashResponse = SlashResponse({
+                'attachments': [
+                    {
+                        'pretext': '이벤트 수정',
+                        'text':b,
+                        'color': '#7CD197',
+                    }
+                ]
+            })
+            
+    return slashResponse
 
-@slack_slash_request
+@slash_request
 def eventlist(request):
     google_calendar = get_credential(request)
-    data = [l.strip() for l in request.POST['text'].split(',') if l.strip()]
+    data = [l.strip() for l in request['text'].split(',') if l.strip()]
     if len(data) == 2:
         data[1] = int(float(data[1]))
         b = google_calendar.list_Calendar(calendar_name=data[0], maxResult=data[1])
@@ -160,32 +221,47 @@ def eventlist(request):
         b = '\r\n'.join(b).strip()
         if not b.strip():
             b = '출력할 데이터가 없습니다'
+    if request['platform'] is Telegram.platform():
+        result = "*이벤트 리스트*\n\n"
+        result = result + b
+        slashResponse = SlashResponse(
+            result
+        )
+    else:
+        slashResponse = SlashResponse({
+            'attachments': [
+                {
+                    'pretext': '이벤트 리스트',
+                    'text':b,
+                    'color': '#7CD197',
+                }
+            ]
+        })
+    return slashResponse
 
-    result = SlashResponse({
-        'attachments': [
-            {
-                'pretext': '이벤트 리스트',
-                'text':b,
-                'color': '#7CD197',
-            }
-        ]
-    })
-    return result
-
-@slack_slash_request
+@slash_request
 def help(request):
     google_calendar = get_credential(request)
     text = google_calendar.help()
-
-    return SlashResponse({
-        'attachments': [
-            {
-                'pretext': '도움말',
-                'text':text,
-                'color': '#7CD197',
-            }
-        ]
-    })
+    if request['platform'] is Telegram.platform():
+        result = "*calender help*\n\n"
+        result = result + text.replace('-', '\_')
+        print(result)
+        slashResponse = SlashResponse(
+            result
+        )
+    else:
+        slashResponse = SlashResponse({
+            'attachments': [
+                {
+                    'pretext': '도움말',
+                    'text':text,
+                    'color': '#7CD197',
+                }
+            ]
+        })
+    
+    return slashResponse
 
 def redirect(request):
     auth_code = request.GET['code']

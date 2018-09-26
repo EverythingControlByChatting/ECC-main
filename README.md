@@ -10,9 +10,9 @@
 
 ### Prerequisites
 
-* Python3
+* Python >= 3.6
 * Raspberry Pi
-  - Python2.7
+  - Python == 2.7
   - Infrared sensor
 
 ### Installing
@@ -63,10 +63,20 @@
 
 1. run server
     ```bash
-    python3 manage.py rserver 0.0.0.0:8000
+    python3 manage.py runserver 0.0.0.0:8000
     ```
 2. install slack app(Authorize)
     
     http://serverDomain:port/main/slack/add
 
+    * DisallowedHost at /main/slack/add 뜰 경우 해결 방법
+      - https://github.com/EverythingControlByChatting/ECC-main/issues/34
 
+    * serverDomain이 없으면 본인 IP주소 입력
+
+3. set Redirect URLs
+   -  add http://serverDomain:port/main/slack/oauth
+
+## Develop
+
+* IDE내의 Pylint플러그인 사용 적극 권장 (pep8문제가 없어야 합니다.)
