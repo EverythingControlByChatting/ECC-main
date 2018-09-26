@@ -21,7 +21,7 @@ def short_delay_message(request):
 
     p = re.compile(COMMAND_REGEX, re.DOTALL)
    
-    platfrom = request['platfrom'] 
+    platform = request['platform'] 
     text = request['text']
     user_id = request['user_id']
     user_name = request['user_name']
@@ -42,7 +42,7 @@ def short_delay_message(request):
         time.sleep(delay_time)
         send_message = user_name + ">님이 예약한 메시지_\n\n" + message
         
-        if platfrom is Telegram.platfrom():
+        if platform is Telegram.platform():
             send_message = "_<" + send_message
         else:
             send_message = "_<@" + user_id + "|" + send_message

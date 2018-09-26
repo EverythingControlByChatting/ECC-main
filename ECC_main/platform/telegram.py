@@ -38,7 +38,7 @@ class Telegram(PlatformBase):
             
         threading.Thread(target=async_func, args=args, kwargs=kwargs).start()
     
-    def platfrom():
+    def platform():
         return 'telegram'
       
     def _get_chat_id(json_body):
@@ -54,12 +54,12 @@ class Telegram(PlatformBase):
         return json.loads(request_body)
     
     def _func_start(json_list, func):
-        platfrom = Telegram.platfrom()
+        platform = Telegram.platform()
         _, text = Telegram.cutCommand(json_list)
         user_name = Telegram._get_user_name(json_list)
         user_id = Telegram._get_user_id(json_list)
         
-        return func(BaseRequest(platfrom, text, user_name, user_id))
+        return func(BaseRequest(platform, text, user_name, user_id))
         
     
     def _send_message(data, chat_id, parse_mode="MARKDOWN"):

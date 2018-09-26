@@ -10,7 +10,7 @@ class PlatformBase(metaclass=ABCMeta):
         pass
    
     @abstractmethod
-    def platfrom():
+    def platform():
         pass
       
     @abstractmethod
