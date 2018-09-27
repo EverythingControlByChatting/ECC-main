@@ -4,19 +4,24 @@ import json
 
 def get_address(address):
     address = str(address)
-    addre = ['%','2','0']
     count = 0
     number = 0 
-
+    print(address)
+    list_str = []
     for mark in address:
         if address[number] == ' ':
              count = count + 1
-        if address[number] != ' ':    
-            if(count > 1):
-                addre += address[number]
+        if count >= 1:
+            if address[number] == ' ':
+                list_str.append('+')
+            else:    
+                list_str.append(address[number])
+            
         number = number + 1
+    
         
-    address = "".join(addre)
+    address = "".join(list_str)
+    address = str(address)
     return address
 
 if __name__ == "__main__":
