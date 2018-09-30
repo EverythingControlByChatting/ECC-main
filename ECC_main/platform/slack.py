@@ -9,7 +9,7 @@ import requests
 class Slack(PlatformBase):
     
     def slash_command(request, func):
-        token = request['token']
+        token = request.POST['token']
 
         if ECC_main.settings.SLACK_VERIFICATION_TOKEN == token:
             print("authenticated!")
